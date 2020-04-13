@@ -13,9 +13,9 @@ Usage
     pip3 install --user requests dateutil
 
 2. Find your Loblaws location ID.
-  1. Go to https://www.loblaws.ca/store-locator
-  2. Choose a location and click the "Location Details" link
-  3. Find the integer ID at the end of the URL (e.g., `1007` from https://www.loblaws.ca/store-locator/details/1007)
+    1. Go to https://www.loblaws.ca/store-locator
+    2. Choose a location and click the "Location Details" link
+    3. Find the integer ID at the end of the URL (e.g., `1007` from https://www.loblaws.ca/store-locator/details/1007)
 
 3. Run the main script.
 
