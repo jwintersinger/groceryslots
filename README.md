@@ -53,3 +53,20 @@ You can configure the script to announce new slots via any Chromecast device (in
     ```
     python3 check_slots.py --location 1007 --announce
     ```
+
+Usage reference
+---------------
+```
+usage: check_slots.py [-h] [--location LOCATION] [--delay DELAY] [--tzoffset TZOFFSET] [--announce] [--site {loblaws,superstore}]
+
+Query PC-umbrella grocery store (Loblaws, Superstore, etc.) for open pick-up slots
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --location LOCATION   Integer ID of PC-umbrella (Loblaws, Superstore, etc.) grocery store (default: 1007)
+  --delay DELAY         Delay ins econds between checks (default: 60)
+  --tzoffset TZOFFSET   Timezone offset in hours. Default seems to work for both Toronto and Calgary (default: 4)
+  --announce            Announce new open slots via Chromecast device (including Google home (default: False)
+  --site {loblaws,superstore}
+                        Type of PC-umbrella grocery store (default: loblaws)
+```

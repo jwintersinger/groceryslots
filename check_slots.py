@@ -71,18 +71,23 @@ def check_slots(site, location, cookies, tzoffset=4):
 
 def main():
   parser = argparse.ArgumentParser(
-  description='LOL HI THERE',
-  formatter_class=argparse.ArgumentDefaultsHelpFormatter
+    description='Query PC-umbrella grocery store (Loblaws, Superstore, etc.) for open pick-up slots',
+    formatter_class=argparse.ArgumentDefaultsHelpFormatter
   )
   # To find the location:
   # 1. Go to https://www.loblaws.ca/store-locator
   # 2. Choose a location and click the "Location Details" link
   # 3. Find the integer ID at the end of the URL (e.g., https://www.loblaws.ca/store-locator/details/1007)
-  parser.add_argument('--location', type=int, default=1007)
-  parser.add_argument('--delay', type=float, default=60)
-  parser.add_argument('--tzoffset', type=int, default=4)
-  parser.add_argument('--announce', action='store_true')
-  parser.add_argument('--site', choices=('loblaws', 'superstore'), default='loblaws')
+  parser.add_argument('--location', type=int, default=1007,
+    help='Integer ID of PC-umbrella (Loblaws, Superstore, etc.) grocery store')
+  parser.add_argument('--delay', type=float, default=60,
+    help='Delay ins econds between checks')
+  parser.add_argument('--tzoffset', type=int, default=4,
+    help='Timezone offset in hours. Default seems to work for both Toronto and Calgary')
+  parser.add_argument('--announce', action='store_true',
+    help='Announce new open slots via Chromecast device (including Google home')
+  parser.add_argument('--site', choices=('loblaws', 'superstore'), default='loblaws',
+    help='Type of PC-umbrella grocery store')
   args = parser.parse_args()
 
   init_cookies = get_cookies(args.site)
