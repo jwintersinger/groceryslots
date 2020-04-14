@@ -6,6 +6,15 @@ import argparse
 import sys
 import re
 
+DOMAINS = {
+  'superstore': 'www.realcanadiansuperstore.ca',
+  'loblaws': 'www.loblaws.ca',
+}
+SITE_BANNERS = {
+  'superstore': 'superstore',
+  'loblaws': 'loblaw',
+}
+
 # From https://stackoverflow.com/a/15586020
 class Reprinter:
   def __init__(self):
@@ -26,24 +35,23 @@ class Reprinter:
     sys.stdout.write(text)
     self.text = text
 
-def make_header():
+def make_header(site):
   headers = {
     'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:75.0) Gecko/20100101 Firefox/75.0',
     'Accept': 'application/json, text/plain, */*',
     'Accept-Language': 'en' ,
-    'Site-Banner': 'loblaw',
+    'Site-Banner': SITE_BANNERS[site],
     'Content-Type': 'application/json;charset=utf-8',
     'Connection': 'keep-alive',
-    'Referer': 'https://www.loblaws.ca/faq',
    }
   return headers
 
-def fetch(location, cookies):
-  r = requests.get('https://www.loblaws.ca/api/pickup-locations/%s/time-slots' % location, cookies=cookies, headers=make_header())
+def fetch(site, location, cookies):
+  r = requests.get('https://%s/api/pickup-locations/%s/time-slots' % (DOMAINS[site], location), cookies=cookies, headers=make_header(site))
   return r.json()
 
-def get_cookies():
-  r = requests.get('https://www.loblaws.ca', headers=make_header())
+def get_cookies(site):
+  r = requests.get('https://%s' % DOMAINS[site], headers=make_header(site))
   return r.cookies
 
 def parse_time(T, offset):
@@ -52,8 +60,8 @@ def parse_time(T, offset):
   T -= datetime.timedelta(hours=offset)
   return T
 
-def check_slots(location, cookies, tzoffset=4):
-  response = fetch(location, cookies)
+def check_slots(site, location, cookies, tzoffset=4):
+  response = fetch(site, location, cookies)
   avail = [(
     parse_time(S['startTime'], tzoffset),
     parse_time(S['endTime'], tzoffset),
@@ -74,17 +82,18 @@ def main():
   parser.add_argument('--delay', type=float, default=60)
   parser.add_argument('--tzoffset', type=int, default=4)
   parser.add_argument('--announce', action='store_true')
+  parser.add_argument('--site', choices=('loblaws', 'superstore'), default='loblaws')
   args = parser.parse_args()
 
-  init_cookies = get_cookies()
+  init_cookies = get_cookies(args.site)
   rep = Reprinter()
   prev_first_slot = None
 
   while True:
-    slots = check_slots(args.location, init_cookies, args.tzoffset)
+    slots = check_slots(args.site, args.location, init_cookies, args.tzoffset)
     if args.announce and len(slots) > 0 and slots[0] != prev_first_slot:
       import saytext
-      saytime = slots[0].strftime('The next available Loblaws pickup slot is on %A, %B %d at %I %p.')
+      saytime = slots[0].strftime('The next available grocery pickup slot is on %A, %B %d at %I %p.')
       saytext.say(saytime)
       prev_first_slot = slots[0]
 

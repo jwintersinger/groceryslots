@@ -1,6 +1,6 @@
 Grocery Slots
 =============
-This program will periodically check Loblaws for open grocery pick-up slots (by default, every 60 seconds), printing open slots to the terminal. The program can also announce via any Chromecast-compatible device (including Google Home) when a new spot opens.
+This program will periodically check Loblaws or Superstore for open grocery pick-up slots (by default, every 60 seconds), printing open slots to the terminal. The program can also announce via any Chromecast-compatible device (including Google Home) when a new spot opens.
 
 Requirements
 ------------
@@ -22,7 +22,7 @@ Usage
 3. Run the main script.
 
     ```
-    python3 loblaws.py --location 1007
+    python3 check_slots.py --location 1007
     ```
 
 Getting audible announcements
@@ -51,5 +51,5 @@ You can configure the script to announce new slots via any Chromecast device (in
 4. Run the main script with `--announce`.
 
     ```
-    python3 loblaws.py --location 1007 --announce
+    python3 check_slots.py --location 1007 --announce
     ```
